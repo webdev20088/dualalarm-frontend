@@ -5,32 +5,146 @@
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 
-  <style>
-    body {
-      font-family: Arial;
-      background: #0f2027;
-      color: white;
-      text-align: center;
-      padding: 20px;
-    }
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-    button {
-      padding: 10px 20px;
-      margin: 10px;
-      cursor: pointer;
-    }
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
 
-    input {
-      padding: 10px;
-      width: 200px;
-    }
+body {
+  font-family: 'Inter', sans-serif;
+  background: radial-gradient(circle at top, #1f1c2c, #0f2027);
+  color: #eaeaea;
+  text-align: center;
+  padding: 30px;
+}
 
-    .user {
-      margin: 10px;
-      padding: 10px;
-      border: 1px solid white;
-    }
-  </style>
+/* 🔥 GLASS CARD */
+#wake, #login, #app {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  border-radius: 20px;
+  padding: 25px;
+  margin: 20px auto;
+  max-width: 420px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: 0.3s ease;
+}
+
+#wake:hover, #login:hover, #app:hover {
+  transform: translateY(-3px);
+}
+
+/* 🔥 HEADINGS */
+h2 {
+  font-size: 32px;
+  margin-bottom: 20px;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff7eb3, #7afcff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h3 {
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-weight: 600;
+  color: #cfcfcf;
+}
+
+/* 🔥 INPUT */
+input {
+  padding: 12px;
+  width: 80%;
+  border-radius: 12px;
+  border: none;
+  outline: none;
+  margin-top: 10px;
+  background: rgba(255,255,255,0.08);
+  color: white;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+input:focus {
+  background: rgba(255,255,255,0.12);
+  box-shadow: 0 0 10px rgba(122,252,255,0.3);
+}
+
+/* 🔥 BUTTON */
+button {
+  padding: 12px 18px;
+  margin: 10px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  background: linear-gradient(135deg, #ff7eb3, #7afcff);
+  color: black;
+  transition: all 0.25s ease;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+}
+
+button:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+button:active {
+  transform: scale(0.95);
+}
+
+/* 🔥 CONNECTION CARD */
+.user {
+  margin: 15px auto;
+  padding: 15px;
+  border-radius: 16px;
+  width: 85%;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.08);
+  transition: 0.25s;
+  backdrop-filter: blur(10px);
+}
+
+.user:hover {
+  transform: translateY(-4px);
+  background: rgba(255,255,255,0.1);
+}
+
+/* 🔥 TEXT */
+#welcome {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 10px;
+}
+
+/* 🔥 STATUS TEXT */
+#wakeStatus {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #7afcff;
+}
+
+/* 🔥 SCROLL (if needed) */
+#connections {
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 10px;
+}
+
+#connections::-webkit-scrollbar {
+  width: 6px;
+}
+
+#connections::-webkit-scrollbar-thumb {
+  background: #7afcff;
+  border-radius: 10px;
+}
+</style>
 </head>
 
 <body>
