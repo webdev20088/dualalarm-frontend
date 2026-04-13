@@ -2,156 +2,98 @@
 <html>
 <head>
   <title>DuoAlarm Web 🚨</title>
+
+  <!-- Firebase -->
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-messaging-compat.js"></script>
 
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+  <!-- 🔥 SEXY CSS -->
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+    * { margin: 0; padding: 0; box-sizing: border-box; }
 
-body {
-  font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at top, #1f1c2c, #0f2027);
-  color: #eaeaea;
-  text-align: center;
-  padding: 30px;
-}
+    body {
+      font-family: 'Inter', sans-serif;
+      background: radial-gradient(circle at top, #1f1c2c, #0f2027);
+      color: #eaeaea;
+      text-align: center;
+      padding: 30px;
+    }
 
-/* 🔥 GLASS CARD */
-#wake, #login, #app {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(18px);
-  border-radius: 20px;
-  padding: 25px;
-  margin: 20px auto;
-  max-width: 420px;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.4);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: 0.3s ease;
-}
+    #wake, #login, #app {
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(18px);
+      border-radius: 20px;
+      padding: 25px;
+      margin: 20px auto;
+      max-width: 420px;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.4);
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: 0.3s ease;
+    }
 
-#wake:hover, #login:hover, #app:hover {
-  transform: translateY(-3px);
-}
+    #wake:hover, #login:hover, #app:hover {
+      transform: translateY(-3px);
+    }
 
-/* 🔥 HEADINGS */
-h2 {
-  font-size: 32px;
-  margin-bottom: 20px;
-  font-weight: 700;
-  background: linear-gradient(90deg, #ff7eb3, #7afcff);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+    h2 {
+      font-size: 32px;
+      margin-bottom: 20px;
+      font-weight: 700;
+      background: linear-gradient(90deg, #ff7eb3, #7afcff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-h3 {
-  margin-top: 20px;
-  margin-bottom: 10px;
-  font-weight: 600;
-  color: #cfcfcf;
-}
+    h3 { margin: 20px 0 10px; color: #cfcfcf; }
 
-/* 🔥 INPUT */
-input {
-  padding: 12px;
-  width: 80%;
-  border-radius: 12px;
-  border: none;
-  outline: none;
-  margin-top: 10px;
-  background: rgba(255,255,255,0.08);
-  color: white;
-  font-size: 14px;
-  transition: 0.2s;
-}
+    input {
+      padding: 12px;
+      width: 80%;
+      border-radius: 12px;
+      border: none;
+      background: rgba(255,255,255,0.08);
+      color: white;
+    }
 
-input:focus {
-  background: rgba(255,255,255,0.12);
-  box-shadow: 0 0 10px rgba(122,252,255,0.3);
-}
+    button {
+      padding: 12px 18px;
+      margin: 10px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      background: linear-gradient(135deg, #ff7eb3, #7afcff);
+      color: black;
+      transition: 0.25s;
+    }
 
-/* 🔥 BUTTON */
-button {
-  padding: 12px 18px;
-  margin: 10px;
-  border-radius: 12px;
-  border: none;
-  cursor: pointer;
-  font-weight: 600;
-  background: linear-gradient(135deg, #ff7eb3, #7afcff);
-  color: black;
-  transition: all 0.25s ease;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-}
+    button:hover {
+      transform: scale(1.05);
+    }
 
-button:hover {
-  transform: translateY(-2px) scale(1.05);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
+    .user {
+      margin: 15px auto;
+      padding: 15px;
+      border-radius: 16px;
+      width: 85%;
+      background: rgba(255,255,255,0.06);
+    }
 
-button:active {
-  transform: scale(0.95);
-}
-
-/* 🔥 CONNECTION CARD */
-.user {
-  margin: 15px auto;
-  padding: 15px;
-  border-radius: 16px;
-  width: 85%;
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.08);
-  transition: 0.25s;
-  backdrop-filter: blur(10px);
-}
-
-.user:hover {
-  transform: translateY(-4px);
-  background: rgba(255,255,255,0.1);
-}
-
-/* 🔥 TEXT */
-#welcome {
-  font-size: 18px;
-  font-weight: 500;
-  margin-bottom: 10px;
-}
-
-/* 🔥 STATUS TEXT */
-#wakeStatus {
-  margin-top: 10px;
-  font-size: 14px;
-  color: #7afcff;
-}
-
-/* 🔥 SCROLL (if needed) */
-#connections {
-  max-height: 300px;
-  overflow-y: auto;
-  margin-top: 10px;
-}
-
-#connections::-webkit-scrollbar {
-  width: 6px;
-}
-
-#connections::-webkit-scrollbar-thumb {
-  background: #7afcff;
-  border-radius: 10px;
-}
-</style>
+    #connections {
+      max-height: 300px;
+      overflow-y: auto;
+    }
+  </style>
 </head>
 
 <body>
 
 <h2>DuoAlarm Web 🚨</h2>
 
-<!-- 🔥 UNSLEEP BUTTON -->
+<!-- WAKE -->
 <div id="wake">
   <p>Server may be sleeping 😴</p>
   <button onclick="wakeServer()">Unsleep Server</button>
@@ -179,9 +121,9 @@ button:active {
 </div>
 
 <script>
-  const BACKEND_URL = "https://duoalarm-backend.onrender.com";
+const BACKEND_URL = "https://duoalarm-backend.onrender.com";
 
-  const firebaseConfig = {
+const firebaseConfig = {
     apiKey: "AIzaSyDVmBpu0l5FRhP2N87droigzL5bEV1f7GY",
     authDomain: "duoalarm20078.firebaseapp.com",
     projectId: "duoalarm20078",
@@ -191,84 +133,111 @@ button:active {
     measurementId: "G-9592GJCZEH"
   };
 
-  const app = firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+const messaging = firebase.messaging();
 
-  let currentUser = localStorage.getItem("username");
+// 🔥 WAKE SERVER
+async function wakeServer() {
+  document.getElementById("wakeStatus").innerText = "Waking server...";
+  try {
+    await fetch(BACKEND_URL);
+    document.getElementById("wake").style.display = "none";
+    document.getElementById("login").style.display = "block";
+  } catch {
+    document.getElementById("wakeStatus").innerText = "Retry...";
+  }
+}
 
-  // 🔥 UNSLEEP SERVER
-  async function wakeServer() {
-    document.getElementById("wakeStatus").innerText = "Waking server...";
+// LOGIN
+function login() {
+  const username = document.getElementById("username").value;
+  localStorage.setItem("username", username);
+  showApp(username);
+}
 
-    try {
-      await fetch(BACKEND_URL);
-      document.getElementById("wakeStatus").innerText = "✅ Server awake!";
-      document.getElementById("wake").style.display = "none";
-      document.getElementById("login").style.display = "block";
-    } catch {
-      document.getElementById("wakeStatus").innerText = "Retry...";
+function logout() {
+  localStorage.removeItem("username");
+  location.reload();
+}
+
+function showApp(username) {
+  document.getElementById("login").style.display = "none";
+  document.getElementById("app").style.display = "block";
+  document.getElementById("welcome").innerText = "Hello " + username;
+
+  setupFCM(username);
+  loadConnections(username);
+}
+
+// 🔥 SETUP FCM
+function setupFCM(username) {
+  Notification.requestPermission().then(permission => {
+    if (permission === "granted") {
+      messaging.getToken().then(token => {
+        console.log("Token:", token);
+
+        db.collection("users").doc(username).set({
+          token: token
+        }, { merge: true });
+      });
     }
+  });
+}
+
+// 🔥 RECEIVE MESSAGES
+messaging.onMessage((payload) => {
+  console.log("Received:", payload);
+
+  if (payload.data?.type === "snoozed") {
+    alert(payload.data.sender + " snoozed your alarm 😴");
+    return;
   }
 
-  function login() {
-    const username = document.getElementById("username").value;
-    localStorage.setItem("username", username);
-    showApp(username);
-  }
+  alert("🔔 Alarm from " + payload.data.sender);
+});
 
-  function logout() {
-    localStorage.removeItem("username");
-    location.reload();
-  }
+// CONNECTIONS
+async function loadConnections(username) {
+  const doc = await db.collection("users").doc(username).get();
+  const connections = doc.data()?.connections || [];
 
-  function showApp(username) {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
-    document.getElementById("welcome").innerText = "Hello " + username;
+  const container = document.getElementById("connections");
+  container.innerHTML = "";
 
-    loadConnections(username);
-  }
+  connections.forEach(user => {
+    const div = document.createElement("div");
+    div.className = "user";
 
-  async function loadConnections(username) {
-    const doc = await db.collection("users").doc(username).get();
-    const connections = doc.data()?.connections || [];
+    div.innerHTML = `
+      <b>${user}</b><br>
+      <button onclick="ring('${user}')">Ring 🔔</button>
+    `;
 
-    const container = document.getElementById("connections");
-    container.innerHTML = "";
+    container.appendChild(div);
+  });
+}
 
-    connections.forEach(user => {
-      const div = document.createElement("div");
-      div.className = "user";
+// 🔥 SEND ALARM
+async function ring(targetUser) {
+  const sender = localStorage.getItem("username");
 
-      div.innerHTML = `
-        <b>${user}</b><br>
-        <button onclick="ring('${user}')">Ring 🔔</button>
-      `;
+  const doc = await db.collection("users").doc(targetUser).get();
+  const token = doc.data().token;
 
-      container.appendChild(div);
-    });
-  }
+  await fetch(BACKEND_URL + "/sendAlarm", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ sender, token })
+  });
 
-  async function ring(targetUser) {
-    const sender = localStorage.getItem("username");
+  alert("Ringing " + targetUser);
+}
 
-    const doc = await db.collection("users").doc(targetUser).get();
-    const token = doc.data().token;
-
-    await fetch(BACKEND_URL + "/sendAlarm", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ sender, token })
-    });
-
-    alert("Ringing " + targetUser);
-  }
-
-  // 🔥 DIRECT SEARCH RING
-  async function ringDirect() {
-    const targetUser = document.getElementById("searchUser").value;
-    ring(targetUser);
-  }
+function ringDirect() {
+  const targetUser = document.getElementById("searchUser").value;
+  ring(targetUser);
+}
 </script>
 
 </body>
