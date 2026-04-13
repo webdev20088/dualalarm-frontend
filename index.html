@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DuoAlarm Web 🚨</title>
+
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f2027;
+      color: white;
+      text-align: center;
+      padding: 20px;
+    }
+
+    button {
+      padding: 10px 20px;
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    input {
+      padding: 10px;
+      width: 200px;
+    }
+
+    .user {
+      margin: 10px;
+      padding: 10px;
+      border: 1px solid white;
+    }
+  </style>
+</head>
+
+<body>
+
+<h2>DuoAlarm Web 🚨</h2>
+
+<!-- 🔥 UNSLEEP BUTTON -->
+<div id="wake">
+  <p>Server may be sleeping 😴</p>
+  <button onclick="wakeServer()">Unsleep Server</button>
+  <p id="wakeStatus"></p>
+</div>
+
+<!-- LOGIN -->
+<div id="login" style="display:none;">
+  <input id="username" placeholder="Enter username">
+  <br>
+  <button onclick="login()">Login</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+  <h3 id="welcome"></h3>
+  <button onclick="logout()">Logout</button>
+
+  <h3>Search User</h3>
+  <input id="searchUser">
+  <button onclick="ringDirect()">Ring 🔔</button>
+
+  <h3>Your Connections</h3>
+  <div id="connections"></div>
+</div>
+
+<script>
+  const BACKEND_URL = "https://duoalarm-backend.onrender.com";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyDVmBpu0l5FRhP2N87droigzL5bEV1f7GY",
+    authDomain: "duoalarm20078.firebaseapp.com",
+    projectId: "duoalarm20078",
+    storageBucket: "duoalarm20078.firebasestorage.app",
+    messagingSenderId: "609915871258",
+    appId: "1:609915871258:web:dd47b54849fd95130831a3",
+    measurementId: "G-9592GJCZEH"
+  };
+
+  const app = firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+
+  let currentUser = localStorage.getItem("username");
+
+  // 🔥 UNSLEEP SERVER
+  async function wakeServer() {
+    document.getElementById("wakeStatus").innerText = "Waking server...";
+
+    try {
+      await fetch(BACKEND_URL);
+      document.getElementById("wakeStatus").innerText = "✅ Server awake!";
+      document.getElementById("wake").style.display = "none";
+      document.getElementById("login").style.display = "block";
+    } catch {
+      document.getElementById("wakeStatus").innerText = "Retry...";
+    }
+  }
+
+  function login() {
+    const username = document.getElementById("username").value;
+    localStorage.setItem("username", username);
+    showApp(username);
+  }
+
+  function logout() {
+    localStorage.removeItem("username");
+    location.reload();
+  }
+
+  function showApp(username) {
+    document.getElementById("login").style.display = "none";
+    document.getElementById("app").style.display = "block";
+    document.getElementById("welcome").innerText = "Hello " + username;
+
+    loadConnections(username);
+  }
+
+  async function loadConnections(username) {
+    const doc = await db.collection("users").doc(username).get();
+    const connections = doc.data()?.connections || [];
+
+    const container = document.getElementById("connections");
+    container.innerHTML = "";
+
+    connections.forEach(user => {
+      const div = document.createElement("div");
+      div.className = "user";
+
+      div.innerHTML = `
+        <b>${user}</b><br>
+        <button onclick="ring('${user}')">Ring 🔔</button>
+      `;
+
+      container.appendChild(div);
+    });
+  }
+
+  async function ring(targetUser) {
+    const sender = localStorage.getItem("username");
+
+    const doc = await db.collection("users").doc(targetUser).get();
+    const token = doc.data().token;
+
+    await fetch(BACKEND_URL + "/sendAlarm", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sender, token })
+    });
+
+    alert("Ringing " + targetUser);
+  }
+
+  // 🔥 DIRECT SEARCH RING
+  async function ringDirect() {
+    const targetUser = document.getElementById("searchUser").value;
+    ring(targetUser);
+  }
+</script>
+
+</body>
+</html>
